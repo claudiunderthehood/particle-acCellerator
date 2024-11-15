@@ -35,12 +35,10 @@ void updateParticles(Particle particles[], int num_particles, float dt) {
 }
 
 // Checks for collisions and splits particles if conditions are met
-void checkCollisions(Particle particles[], int *num_particles) {
-    Quadtree *qt = createQuadtree(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtree) {
     // Insert particles into the quadtree
     for (int i = 0; i < *num_particles; i++) {
-        insertParticle(qt, &particles[i]);
+        insertParticle(quadtree, &particles[i]);
     }
 
     // Check for collisions
@@ -48,7 +46,7 @@ void checkCollisions(Particle particles[], int *num_particles) {
         Particle *nearby[MAX_PARTICLES];
         int found_count = 0;
 
-        queryRange(qt, particles[i].x, particles[i].y, particles[i].radius * 2, nearby, &found_count);
+        queryRange(quadtree, particles[i].x, particles[i].y, particles[i].radius * 2, nearby, &found_count);
 
         for (int j = 0; j < found_count; j++) {
             Particle *other = nearby[j];
@@ -78,8 +76,6 @@ void checkCollisions(Particle particles[], int *num_particles) {
             }
         }
     }
-
-    freeQuadtree(qt);
 }
 
 
@@ -204,4 +200,3 @@ void freeQuadtree(Quadtree *qt) {
 
     free(qt);
 }
-

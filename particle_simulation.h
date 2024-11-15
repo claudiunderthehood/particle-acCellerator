@@ -30,7 +30,7 @@ typedef struct Quadtree {
 
 void updateParticles(Particle particles[], int num_particles, float dt);
 void renderParticles(SDL_Renderer *renderer, Particle particles[], int num_particles);
-void checkCollisions(Particle particles[], int *num_particles);
+void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtree);
 void increaseSpeedMultiplier(float *speed_multiplier);
 void decreaseSpeedMultiplier(float *speed_multiplier);
 void printSpeedMultiplier(float speed_multiplier);

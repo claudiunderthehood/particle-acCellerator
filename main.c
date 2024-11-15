@@ -30,6 +30,9 @@ int main(int argc, char *argv[]) {
         particles[i].color = (SDL_Color){255, 255, 255, 255};
     }
 
+    // Initialize a single quadtree
+    Quadtree *quadtree = createQuadtree(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+
     int running = 1;
     float dt = 0.016f;
 
@@ -55,9 +58,15 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        updateParticles(particles, num_particles, dt);
-        checkCollisions(particles, &num_particles);
+        // Clear the quadtree before reinserting particles
+        freeQuadtree(quadtree);
+        quadtree = createQuadtree(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+        // Update particles and check collisions
+        updateParticles(particles, num_particles, dt);
+        checkCollisions(particles, &num_particles, quadtree);
+
+        // Render particles
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         renderParticles(renderer, particles, num_particles);
@@ -66,6 +75,8 @@ int main(int argc, char *argv[]) {
         SDL_Delay(16); // ~60 FPS
     }
 
+    // Clean up
+    freeQuadtree(quadtree);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
