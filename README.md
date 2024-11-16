@@ -1,3 +1,4 @@
+
 # Particle Accelerator Simulation
 
 This project is a particle accelerator simulator written in C using SDL2. The simulator models particles moving, colliding, and splitting under simple physics principles. It demonstrates core physics concepts such as motion, velocity, acceleration, elastic collisions, and dynamic memory management in an interactive particle simulation.
@@ -5,11 +6,11 @@ This project is a particle accelerator simulator written in C using SDL2. The si
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Physics Concepts](#physics-concepts)
-  - [Particle Properties](#particle-properties)
-  - [Equations of Motion](#equations-of-motion)
-  - [Velocity and Acceleration](#velocity-and-acceleration)
-  - [Collisions](#collisions)
-  - [Particle Splitting](#particle-splitting)
+  - [Particle Properties](#1-particle-properties)
+  - [Equations of Motion](#2-equations-of-motion)
+  - [Velocity and Acceleration](#3-velocity-and-acceleration)
+  - [Collisions](#4-collisions)
+  - [Particle Splitting](#5-particle-splitting)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -168,11 +169,6 @@ particle-accelerator-simulation/
 └── README.md               # Project documentation
 ```
 
-### Files Explained
-- **main.c**: Initializes SDL2, sets up the simulation loop, and handles user input for speed adjustment.
-- **particle_simulation.h**: Defines the `Particle` structure, constants, and function prototypes.
-- **particle_simulation.c**: Implements the simulation, including particle motion, collision detection, and splitting logic.
-
 ---
 
 ## Future Improvements
@@ -182,5 +178,3 @@ Potential enhancements include:
 - **Dynamic Particle Addition**: Allow users to add or remove particles during the simulation.
 - **Enhanced Visuals**: Use gradients or textures to represent particle velocity or size.
 - **Efficient Data Structures**: Optimize performance for large particle counts with advanced spatial partitioning.
-
---- 
