@@ -66,12 +66,38 @@ If `distance < radius1 + radius2`:
 - If additional conditions are met (e.g., velocity threshold, particle size), particles may split.
 
 ### 5. Particle Splitting
-On certain collisions, particles split into smaller particles:
-- Each resulting particle inherits part of the original velocity.
-- Their sizes are reduced, and they are slightly offset from each other to avoid immediate re-collision.
-- The split is logged in the console with the message `Particle split!`.
 
----
+On certain high-energy collisions, particles split into smaller particles. This behavior is inspired by principles in particle physics, particularly the conservation of energy and momentum. When a particle reaches a velocity threshold corresponding to high kinetic energy, it may split. The resulting particles:
+
+1. **Inherit Velocity**:
+   - The velocities of the split particles are derived from the parent particle's velocity vector, maintaining momentum conservation:
+     ```
+     vx1 = vx_parent * cos(angle) * factor
+     vy1 = vy_parent * sin(angle) * factor
+     vx2 = vx_parent * cos(angle + π) * factor
+     vy2 = vy_parent * sin(angle + π) * factor
+     ```
+   - The factor determines how much of the parent velocity each child inherits.
+
+2. **Spawn at Parent Location**:
+   - The new particles are positioned at or near the parent particle's position to avoid immediate collisions.
+
+3. **Conserve Momentum**:
+   - The total momentum of the child particles matches the parent particle's momentum before the split:
+     ```
+     mv_parent = m1v1 + m2v2
+     ```
+   - Here, `m` represents mass, which is proportional to particle radius (`mass ∝ radius³`).
+
+4. **Threshold for Splitting**:
+   - Particles only split when their velocity magnitude exceeds a defined threshold:
+     ```
+     speed = √(vx² + vy²)
+     ```
+   - This ensures that splitting occurs only at high velocities, simulating real-world particle accelerator dynamics.
+
+5. **Log Splitting**:
+   - Each split event is logged to the console with a message: `Particle split! Total particles: N`.
 
 ## Features
 

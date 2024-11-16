@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    int num_particles = 500;
+    int num_particles = 250;
     Particle particles[MAX_PARTICLES];
     float speed_multiplier = 1.0f;
 
@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < num_particles; i++) {
         particles[i].x = rand() % SCREEN_WIDTH;
         particles[i].y = rand() % SCREEN_HEIGHT;
-        particles[i].vx = (float)(rand() % 200 - 100) / 100.0f * speed_multiplier;
-        particles[i].vy = (float)(rand() % 200 - 100) / 100.0f * speed_multiplier;
+        particles[i].vx = ((float)(rand() % 200 - 100) / 50.0f); // Increase range for randomness
+        particles[i].vy = ((float)(rand() % 200 - 100) / 50.0f);
         particles[i].radius = 4.0f; // Larger radius for initial particles
-        particles[i].color = (SDL_Color){255, 255, 255, 255};
+        particles[i].color = (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255};
     }
 
     // Initialize a single quadtree

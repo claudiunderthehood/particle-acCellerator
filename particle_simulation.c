@@ -41,6 +41,9 @@ void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtre
         insertParticle(quadtree, &particles[i]);
     }
 
+    // Define a very high velocity squared threshold for splitting
+    const float velocity_squared_threshold = 100.0f; // Equivalent to v = 10.0 units/sec
+
     // Check for collisions
     for (int i = 0; i < *num_particles; i++) {
         Particle *nearby[MAX_PARTICLES];
@@ -62,14 +65,15 @@ void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtre
                     other->vx *= -1;
                     other->vy *= -1;
 
-                    // Split particles if velocity is high enough
-                    float velocity_i = fabs(particles[i].vx) + fabs(particles[i].vy);
-                    float velocity_j = fabs(other->vx) + fabs(other->vy);
+                    // Calculate velocity squared for both particles
+                    float velocity_i_squared = particles[i].vx * particles[i].vx + particles[i].vy * particles[i].vy;
+                    float velocity_j_squared = other->vx * other->vx + other->vy * other->vy;
 
-                    if (velocity_i > 2.0f && particles[i].radius > 1.0f) {
+                    // Split particles only if velocity squared exceeds the threshold
+                    if (velocity_i_squared > velocity_squared_threshold && particles[i].radius > 1.0f) {
                         splitParticle(particles, num_particles, i);
                     }
-                    if (velocity_j > 2.0f && other->radius > 1.0f) {
+                    if (velocity_j_squared > velocity_squared_threshold && other->radius > 1.0f) {
                         splitParticle(particles, num_particles, j);
                     }
                 }
@@ -79,34 +83,53 @@ void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtre
 }
 
 
+
 void splitParticle(Particle particles[], int *num_particles, int index) {
     if (*num_particles + 2 >= MAX_PARTICLES) return;
 
     Particle *p = &particles[index];
 
+    float new_radius = p->radius / 2.0f; // Reduce size of split particles
+    if (new_radius < 1.0f) return; // Prevent particles from becoming too small
+
+    // Calculate new velocities to conserve momentum
+    float split_angle = (float)(rand() % 360) * M_PI / 180.0f;
+    float speed = sqrt(p->vx * p->vx + p->vy * p->vy);
+
+    // Split velocities
+    float vx1 = speed * cos(split_angle) * 0.7f; // Distribute momentum
+    float vy1 = speed * sin(split_angle) * 0.7f;
+    float vx2 = speed * cos(split_angle + M_PI) * 0.7f;
+    float vy2 = speed * sin(split_angle + M_PI) * 0.7f;
+
     Particle p1 = {
         .x = p->x,
         .y = p->y,
-        .vx = p->vx + ((float)(rand() % 200 - 100) / 200.0f),
-        .vy = p->vy + ((float)(rand() % 200 - 100) / 200.0f),
-        .radius = p->radius / 2,
+        .vx = vx1,
+        .vy = vy1,
+        .radius = new_radius,
         .color = (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255}
     };
 
     Particle p2 = {
         .x = p->x,
         .y = p->y,
-        .vx = p->vx - ((float)(rand() % 200 - 100) / 200.0f),
-        .vy = p->vy - ((float)(rand() % 200 - 100) / 200.0f),
-        .radius = p->radius / 2,
+        .vx = vx2,
+        .vy = vy2,
+        .radius = new_radius,
         .color = (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255}
     };
 
+    // Replace the original particle with one of the new particles
     particles[index] = p1;
+
+    // Add the other new particle to the list
     particles[*num_particles] = p2;
     (*num_particles)++;
+
     printf("Particle split! Total particles: %d\n", *num_particles);
 }
+
 
 // Render particles
 void renderParticles(SDL_Renderer *renderer, Particle particles[], int num_particles) {
