@@ -21,6 +21,19 @@ void printSpeedMultiplier(float speed_multiplier) {
 // Updates particle positions based on velocity and speed multiplier
 void updateParticles(Particle particles[], int num_particles, float dt) {
     for (int i = 0; i < num_particles; i++) {
+        // Calculate forces
+        float force_x = particles[i].charge * ELECTRIC_FIELD; // Electric force (x-direction)
+        float force_y = particles[i].charge * particles[i].vx * MAGNETIC_FIELD; // Magnetic force (y-direction)
+
+        // Acceleration due to forces
+        float ax = force_x; // Assuming mass = 1 for simplicity
+        float ay = force_y + GRAVITY; // Gravity + Magnetic force
+
+        // Update velocities
+        particles[i].vx += ax * dt;
+        particles[i].vy += ay * dt;
+
+        // Update positions
         particles[i].x += particles[i].vx * dt;
         particles[i].y += particles[i].vy * dt;
 
@@ -31,8 +44,14 @@ void updateParticles(Particle particles[], int num_particles, float dt) {
         if (particles[i].y < particles[i].radius || particles[i].y > SCREEN_HEIGHT - particles[i].radius) {
             particles[i].vy *= -1;
         }
+
+        // Console Feedback
+       /* printf("Particle %d: Pos(%.2f, %.2f), Vel(%.2f, %.2f), Forces(E=%.2f, M=%.2f)\n",
+               i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy, force_x, force_y);*/
     }
 }
+
+
 
 // Checks for collisions and splits particles if conditions are met
 void checkCollisions(Particle particles[], int *num_particles, Quadtree *quadtree) {

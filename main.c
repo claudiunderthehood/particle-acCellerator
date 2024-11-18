@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
         particles[i].vy = ((float)(rand() % 200 - 100) / 50.0f);
         particles[i].radius = 4.0f; // Larger radius for initial particles
         particles[i].color = (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255};
+        particles[i].charge = (rand() % 2 == 0 ? -1.0f : 1.0f); // Random positive or negative charge
     }
 
     // Initialize a single quadtree

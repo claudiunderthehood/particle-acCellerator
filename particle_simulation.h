@@ -9,11 +9,15 @@
 #define MAX_CAPACITY 4    // Maximum particles per Quadtree node before splitting
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+#define GRAVITY 9.8f
+#define ELECTRIC_FIELD 100.0f // Electric field strength (N/C)
+#define MAGNETIC_FIELD 1.0f   // Magnetic field strength (T) 
 
 typedef struct Particle {
     float x, y;         // Position
     float vx, vy;       // Velocity
-    float radius;       // Radius for collision detection
+    float radius;
+    float charge;       // Radius for collision detection
     SDL_Color color;
 } Particle;
 

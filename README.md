@@ -11,6 +11,7 @@ This project is a particle accelerator simulator written in C using SDL2. The si
   - [Velocity and Acceleration](#3-velocity-and-acceleration)
   - [Collisions](#4-collisions)
   - [Particle Splitting](#5-particle-splitting)
+  - [Forces: Gravity and Electromagnetic Fields](#6-forces-gravity-and-electromagnetic-fields)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -100,6 +101,46 @@ On certain high-energy collisions, particles split into smaller particles. This 
 5. **Log Splitting**:
    - Each split event is logged to the console with a message: `Particle split! Total particles: N`.
 
+### 6. Forces: Gravity and Electromagnetic Fields
+
+Particles in the simulation are influenced by external forces:
+
+#### **Gravity**
+A downward force acts on all particles:
+```
+Fy_gravity = mass * GRAVITY
+```
+- `GRAVITY` is a constant acceleration due to gravity, applied uniformly to all particles.
+
+#### **Electric Field**
+Particles with charge `q` experience a force in the direction of the electric field `E`:
+```
+Fx_electric = q * E
+```
+
+#### **Magnetic Field**
+Moving charged particles also experience a force due to the magnetic field `B`. This force is perpendicular to the velocity of the particle:
+```
+Fy_magnetic = q * vx * B
+```
+
+#### **Lorentz Force**
+The total force acting on a charged particle combines electric and magnetic field effects. The **Lorentz force** equation is:
+```
+F = q * (E + v × B)
+```
+Where:
+- `F` is the total force vector.
+- `q` is the particle's charge.
+- `E` is the electric field vector.
+- `v` is the velocity vector of the particle.
+- `B` is the magnetic field vector.
+
+This formula governs the trajectory of charged particles in combined electric and magnetic fields. For example:
+- **Parallel Fields**: Particles accelerate uniformly.
+- **Perpendicular Fields**: Particles move in helical paths.
+
+---
 ## Features
 
 - **Dynamic Particle Motion**: Particles move with random initial velocities and bounce off screen edges.
@@ -174,7 +215,6 @@ particle-accelerator-simulation/
 ## Future Improvements
 
 Potential enhancements include:
-- **Gravity or Electromagnetic Fields**: Introduce forces for more complex particle behavior.
 - **Dynamic Particle Addition**: Allow users to add or remove particles during the simulation.
 - **Enhanced Visuals**: Use gradients or textures to represent particle velocity or size.
 - **Efficient Data Structures**: Optimize performance for large particle counts with advanced spatial partitioning.
