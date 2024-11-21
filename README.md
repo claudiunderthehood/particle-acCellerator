@@ -1,4 +1,3 @@
-
 # Particle Accelerator Simulation
 
 This project is a particle accelerator simulator written in C using SDL2. The simulator models particles moving, colliding, and splitting under simple physics principles. It demonstrates core physics concepts such as motion, velocity, acceleration, elastic collisions, and dynamic memory management in an interactive particle simulation.
@@ -17,7 +16,6 @@ This project is a particle accelerator simulator written in C using SDL2. The si
 - [Installation](#installation)
 - [Usage](#usage)
 - [Code Structure](#code-structure)
-- [Future Improvements](#future-improvements)
 
 ---
 
@@ -39,16 +37,22 @@ Each particle has the following properties:
 
 ### 2. Equations of Motion
 Particles move based on their velocities:
-```
-x_new = x + vx * dt
-y_new = y + vy * dt
-```
-- `x, y`: Current position.
-- `vx, vy`: Velocity components.
-- `dt`: Simulation time step.
+
+$$
+x_{\text{new}} = x + v_x \cdot \Delta t
+$$
+
+$$
+y_{\text{new}} = y + v_y \cdot \Delta t
+$$
+
+Where:
+- \( $x$, $y$ \): Current position.
+- \( $v_x$, $v_y$ \): Velocity components.
+- \( $\Delta t$ \): Simulation time step.
 
 ### 3. Velocity and Acceleration
-- **Velocity**: Each particle moves according to its velocity vector `(vx, vy)`, which changes direction upon collisions.
+- **Velocity**: Each particle moves according to its velocity vector \($v_x$, $v_y$)\, which changes direction upon collisions.
 - **Acceleration**: Currently constant at zero; can be extended to incorporate forces.
 - **Speed Adjustment**: A **speed multiplier** allows the user to scale particle velocities dynamically using the `+` and `-` keys. The multiplier directly scales the velocity vector, resulting in faster movement and more energetic collisions.
 
@@ -60,10 +64,18 @@ When a particle reaches the simulation boundary:
 
 #### Particle Collisions
 Particles collide if the distance between their centers is less than the sum of their radii:
-```
-distance = √((x1 - x2)² + (y1 - y2)²)
-```
-If `distance < radius1 + radius2`:
+
+$$
+\text{distance} = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}
+$$
+
+If:
+
+$$
+\text{distance} < \text{radius}_1 + \text{radius}_2
+$$
+
+Then:
 - Velocities are reversed to simulate an elastic collision.
 - If additional conditions are met (e.g., velocity threshold, particle size), particles may split.
 
@@ -73,12 +85,23 @@ On certain high-energy collisions, particles split into smaller particles. This 
 
 1. **Inherit Velocity**:
    - The velocities of the split particles are derived from the parent particle's velocity vector, maintaining momentum conservation:
-     ```
-     vx1 = vx_parent * cos(angle) * factor
-     vy1 = vy_parent * sin(angle) * factor
-     vx2 = vx_parent * cos(angle + π) * factor
-     vy2 = vy_parent * sin(angle + π) * factor
-     ```
+
+   $$
+   v_{x1} = v_{\text{parent}} \cdot \cos(\theta) \cdot \text{factor}
+   $$
+
+   $$
+   v_{y1} = v_{\text{parent}} \cdot \sin(\theta) \cdot \text{factor}
+   $$
+
+   $$
+   v_{x2} = v_{\text{parent}} \cdot \cos(\theta + \pi) \cdot \text{factor}
+   $$
+
+   $$
+   v_{y2} = v_{\text{parent}} \cdot \sin(\theta + \pi) \cdot \text{factor}
+   $$
+
    - The factor determines how much of the parent velocity each child inherits.
 
 2. **Spawn at Parent Location**:
@@ -86,17 +109,20 @@ On certain high-energy collisions, particles split into smaller particles. This 
 
 3. **Conserve Momentum**:
    - The total momentum of the child particles matches the parent particle's momentum before the split:
-     ```
-     mv_parent = m1v1 + m2v2
-     ```
-   - Here, `m` represents mass, which is proportional to particle radius (`mass ∝ radius³`).
+
+   $$
+   m_{\text{parent}} v_{\text{parent}} = m_1 v_1 + m_2 v_2
+   $$
+
+   Where:
+   - \( m \): Mass (proportional to particle radius: \( $m$ $\propto$ $r^3$ \)).
 
 4. **Threshold for Splitting**:
    - Particles only split when their velocity magnitude exceeds a defined threshold:
-     ```
-     speed = √(vx² + vy²)
-     ```
-   - This ensures that splitting occurs only at high velocities, simulating real-world particle accelerator dynamics.
+
+   $$
+   \text{speed} = \sqrt{v_x^2 + v_y^2}
+   $$
 
 5. **Log Splitting**:
    - Each split event is logged to the console with a message: `Particle split! Total particles: N`.
@@ -107,114 +133,50 @@ Particles in the simulation are influenced by external forces:
 
 #### **Gravity**
 A downward force acts on all particles:
-```
-Fy_gravity = mass * GRAVITY
-```
-- `GRAVITY` is a constant acceleration due to gravity, applied uniformly to all particles.
+
+$$
+F_y^{\text{gravity}} = m \cdot g
+$$
+
+Where:
+- \( $g$ \): Gravitational acceleration (a constant).
 
 #### **Electric Field**
-Particles with charge `q` experience a force in the direction of the electric field `E`:
-```
-Fx_electric = q * E
-```
+Particles with charge \( $q$ \) experience a force in the direction of the electric field \( $E$ \):
+
+$$
+F_x^{\text{electric}} = q \cdot E
+$$
 
 #### **Magnetic Field**
-Moving charged particles also experience a force due to the magnetic field `B`. This force is perpendicular to the velocity of the particle:
-```
-Fy_magnetic = q * vx * B
-```
+Moving charged particles also experience a force due to the magnetic field \( $B$ \), perpendicular to their velocity:
+
+$$
+F_y^{\text{magnetic}} = q \cdot v_x \cdot B
+$$
 
 #### **Lorentz Force**
 The total force acting on a charged particle combines electric and magnetic field effects. The **Lorentz force** equation is:
-```
-F = q * (E + v × B)
-```
-Where:
-- `F` is the total force vector.
-- `q` is the particle's charge.
-- `E` is the electric field vector.
-- `v` is the velocity vector of the particle.
-- `B` is the magnetic field vector.
 
-This formula governs the trajectory of charged particles in combined electric and magnetic fields. For example:
-- **Parallel Fields**: Particles accelerate uniformly.
-- **Perpendicular Fields**: Particles move in helical paths.
+$$
+F = q \cdot (E + v \times B)
+$$
+
+Where:
+- \( $F$ \): Total force vector.
+- \( $q$ \): Particle charge.
+- \( $E$ \): Electric field vector.
+- \( $v$ \): Particle velocity vector.
+- \( $B$ \): Magnetic field vector.
+
+This governs the trajectory of charged particles in combined fields.
 
 ---
+
 ## Features
 
 - **Dynamic Particle Motion**: Particles move with random initial velocities and bounce off screen edges.
 - **Speed Adjustment**: Dynamically increase or decrease particle speeds and collision impact by pressing `+` or `-`.
 - **Collision Detection and Splitting**: Particles detect collisions and split into smaller particles if conditions are met.
+- **Dynamic Particle Addition and Removal**: Add particles with `A` or remove particles with `R`.
 - **Realistic Elastic Collisions**: Simulates both wall and particle collisions with basic physics principles.
-- **Console Feedback**: Logs particle splits and current speed multiplier.
-
----
-
-## Requirements
-
-- **C Compiler**: GCC or any C compiler that supports C11.
-- **SDL2 Library**: For rendering particles and handling input events.
-
-To install SDL2 on Linux:
-```bash
-sudo apt install libsdl2-dev
-```
-
-On Windows, use MSYS2:
-```bash
-pacman -S mingw-w64-ucrt-x86_64-SDL2
-```
-
----
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/claudiunderthehood/particle-aCCelerator.git
-   cd particle-aCCelerator
-   ```
-
-2. Compile the program:
-   ```bash
-   gcc main.c particle_simulation.c -o particle_accelerator -lSDL2 -lm
-   ```
-
-3. Run the program:
-   ```bash
-   ./particle_accelerator
-   ```
-
-On Windows, run the generated `.exe` file.
-
----
-
-## Usage
-
-- **Run the simulation** to observe particle motion and interactions.
-- **Press `+`** to increase particle speeds and energy during collisions.
-- **Press `-`** to reduce the simulation speed.
-- **Quit the simulation** by closing the SDL window.
-
----
-
-## Code Structure
-
-The project directory contains:
-```
-particle-accelerator-simulation/
-├── main.c                  # Main program file
-├── particle_simulation.h    # Header file with function declarations and constants
-├── particle_simulation.c    # Contains the function definitions and simulation logic
-└── README.md               # Project documentation
-```
-
----
-
-## Future Improvements
-
-Potential enhancements include:
-- **Dynamic Particle Addition**: Allow users to add or remove particles during the simulation.
-- **Enhanced Visuals**: Use gradients or textures to represent particle velocity or size.
-- **Efficient Data Structures**: Optimize performance for large particle counts with advanced spatial partitioning.

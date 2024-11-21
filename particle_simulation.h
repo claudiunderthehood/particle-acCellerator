@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define MAX_PARTICLES 1000
+#define MAX_PARTICLES 5000
 #define MAX_CAPACITY 4    // Maximum particles per Quadtree node before splitting
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600

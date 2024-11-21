@@ -55,6 +55,23 @@ int main(int argc, char *argv[]) {
                         particles[i].vx /= 1.1f;
                         particles[i].vy /= 1.1f;
                     }
+                
+                }else if (event.key.keysym.sym == SDLK_a) {
+                    if (num_particles < MAX_PARTICLES) {
+                        particles[num_particles].x = rand() % SCREEN_WIDTH;
+                        particles[num_particles].y = rand() % SCREEN_HEIGHT;
+                        particles[num_particles].vx = (float)(rand() % 200 - 100) / 100.0f;
+                        particles[num_particles].vy = (float)(rand() % 200 - 100) / 100.0f;
+                        particles[num_particles].radius = 4.0f;
+                        particles[num_particles].color = (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255};
+                        num_particles++;
+                        printf("Particle added! Total particles: %d\n", num_particles);
+                    }
+                } else if (event.key.keysym.sym == SDLK_r) {
+                    if (num_particles > 0) {
+                        num_particles--;
+                        printf("Particle removed! Total particles: %d\n", num_particles);
+                    }
                 }
             }
         }
