@@ -180,3 +180,73 @@ This governs the trajectory of charged particles in combined fields.
 - **Collision Detection and Splitting**: Particles detect collisions and split into smaller particles if conditions are met.
 - **Dynamic Particle Addition and Removal**: Add particles with `A` or remove particles with `R`.
 - **Realistic Elastic Collisions**: Simulates both wall and particle collisions with basic physics principles.
+
+---
+
+## Requirements
+
+- **C Compiler**: GCC or any C compiler that supports C11.
+- **SDL2 Library**: For rendering particles and handling input events.
+
+To install SDL2 on Linux:
+```bash
+sudo apt install libsdl2-dev
+```
+
+On Windows, use MSYS2:
+```bash
+pacman -S mingw-w64-ucrt-x86_64-SDL2
+```
+
+---
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/claudiunderthehood/particle-aCCelerator.git
+   cd particle-aCCelerator
+   ```
+
+2. Compile the program:
+   ```bash
+   gcc main.c particle_simulation.c -o particle_accelerator -lSDL2 -lm
+   ```
+
+3. Run the program:
+   ```bash
+   ./particle_accelerator
+   ```
+
+On Windows, run the generated `.exe` file.
+
+---
+
+## Usage
+
+- **Run the simulation** to observe particle motion and interactions.
+- **Press `+`** to increase particle speeds and energy during collisions.
+- **Press `-`** to reduce the simulation speed.
+- **Quit the simulation** by closing the SDL window.
+
+---
+
+## Code Structure
+
+The project directory contains:
+```
+particle-accelerator-simulation/
+├── main.c                  # Main program file
+├── particle_simulation.h    # Header file with function declarations and constants
+├── particle_simulation.c    # Contains the function definitions and simulation logic
+└── README.md               # Project documentation
+```
+
+---
+
+## Future Improvements
+
+Potential enhancements include:
+- **Dynamic Particle Addition**: Allow users to add or remove particles during the simulation.
+- **Enhanced Visuals**: Use gradients or textures to represent particle velocity or size.
+- **Efficient Data Structures**: Optimize performance for large particle counts with advanced spatial partitioning.
